@@ -6,6 +6,7 @@ import passport from "passport";
 import {Strategy as GoogleStrategy} from "passport-google-oauth20"
 import config from "./config/config.js"
 import cors from "cors";
+import session from "express-session";
 
 const app = express();
 
@@ -27,7 +28,21 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
+
+// Configure session middleware
+app.use(session({
+  secret: config.JWT_SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { 
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    sameSite: 'lax'
+  }
+}));
+
 app.use(passport.initialize());
+app.use(passport.session());
 
 // Configure Passport to use Google OAuth 2.0 strategy
 passport.use(new GoogleStrategy({
@@ -39,6 +54,16 @@ passport.use(new GoogleStrategy({
   // For this example, we'll just return the profile
   return done(null, profile);
 }));
+
+// Serialize user to session
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+// Deserialize user from session
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
 
 app.use("/api/auth", authRoutes);
 

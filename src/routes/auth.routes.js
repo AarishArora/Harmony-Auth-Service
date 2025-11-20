@@ -19,7 +19,7 @@ router.get('/google',(req, res, next) =>{
 
 
 router.get('/google/callback',
-  passport.authenticate('google', { session: false }),
+  passport.authenticate('google', { session: true, failureRedirect: '/api/auth/login' }),
   authController.googleAuthCallback
 );
 
