@@ -58,10 +58,9 @@ export async function register(req, res) {
 
 export async function googleAuthCallback(req, res) {
 
+    const redirectPath = req.session.redirect || "/";
     const user = req.user;
 
-    // console.log(user);
-    // res.send("Google Auth Callbak");
     const isUserAlreadyExists = await userModel.findOne({
         $or: [
             {email: user.emails[0].value},
@@ -79,7 +78,8 @@ export async function googleAuthCallback(req, res) {
 
         res.cookie("token", token, { 
             httpOnly: false, 
-            secure: false,
+            secure: true,
+            sameSite: "none",
             maxAge: 2 * 24 * 60 * 60 * 1000 
         })
 
@@ -93,10 +93,10 @@ export async function googleAuthCallback(req, res) {
         const encodedUserData = encodeURIComponent(userData);
 
         if(isUserAlreadyExists.role === "artist") {
-            return res.redirect(`${config.FRONTEND_URL}/artist/dashboard?token=${token}&user=${encodedUserData}`)
+            return res.redirect(`${config.FRONTEND_URL}${redirectPath}?token=${token}&user=${encodedUserData}`)
         }
 
-        return res.redirect(`${config.FRONTEND_URL}?token=${token}&user=${encodedUserData}`)
+        return res.redirect(`${config.FRONTEND_URL}${redirectPath}?token=${token}&user=${encodedUserData}`)
     }
 
     const newUser = await userModel.create({
@@ -125,7 +125,8 @@ export async function googleAuthCallback(req, res) {
 
     res.cookie("token", token, { 
         httpOnly: false, 
-        secure: false,
+        secure: true,
+        sameSite: "none",
         maxAge: 2 * 24 * 60 * 60 * 1000 
     })
 

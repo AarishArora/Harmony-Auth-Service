@@ -9,7 +9,11 @@ router.post("/register",validationRules.registerUserValidationRules,authControll
 
 router.post("/login", validationRules.loginUserValidationRules, authController.login);
 
-router.get('/google',
+router.get('/google',(req, res, next) =>{
+  const redirect = req.query.redirect || "/";
+  req.session.redirect = redirect;
+  next();
+},
   passport.authenticate('google', { scope: ['profile', 'email'] })
 );
 
