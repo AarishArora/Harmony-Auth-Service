@@ -19,7 +19,12 @@ app.use(cors({
 app.use((req, res, next) => {
   res.setHeader(
     "Content-Security-Policy",
-    `default-src 'self'; connect-src 'self' ${config.GOOGLE_URI}; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'`
+    `
+    default-src 'self';
+    connect-src 'self' ${config.GOOGLE_URI} ${config.MUSIC_URL} ${config.AUTH_URL} ${config.FRONTEND_URL};
+    script-src 'self' 'unsafe-inline';
+    style-src 'self' 'unsafe-inline';
+    `.replace(/\s+/g, ' ')
   );
   next();
 });

@@ -10,6 +10,7 @@ const _config = {
     RABBITMQ_URI: process.env.RABBITMQ_URI,
     FRONTEND_URL: process.env.FRONTEND_URL,
     AUTH_URL: process.env.AUTH_URL,
+    MUSIC_URL : process.env.MUSIC_URL,
     GOOGLE_URI: process.env.GOOGLE_URI,
     PORT : process.env.PORT,
 }
