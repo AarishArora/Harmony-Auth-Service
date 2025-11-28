@@ -70,6 +70,10 @@ passport.deserializeUser((user, done) => {
   done(null, user);
 });
 
+app.get('/health', (req, res) => {
+  return res.status(200).json({ service: "auth", status: "healthy" });
+});
+
 app.use("/api/auth", authRoutes);
 
 export default app;
