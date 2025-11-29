@@ -11,7 +11,7 @@ import session from "express-session";
 const app = express();
 
 app.use(cors({
-  origin: `${config.FRONTEND_URL}`, // replace with frontend url
+  origin: config.FRONTEND_URL, // replace with frontend url
   credentials: true,
 }));
 
@@ -42,7 +42,7 @@ app.use(session({
   cookie: { 
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
-    sameSite: 'lax'
+    sameSite: 'none'
   }
 }));
 

@@ -77,7 +77,8 @@ export async function googleAuthCallback(req, res) {
         },config.JWT_SECRET, {expiresIn: "2d"})
 
         res.cookie("token", token, { 
-            httpOnly: false, 
+            httpOnly: true, 
+            path: "/",
             secure: true,
             sameSite: "none",
             maxAge: 2 * 24 * 60 * 60 * 1000 
@@ -124,7 +125,8 @@ export async function googleAuthCallback(req, res) {
     },config.JWT_SECRET, {expiresIn: "2d"})
 
     res.cookie("token", token, { 
-        httpOnly: false, 
+        httpOnly: true,
+        path: "/",
         secure: true,
         sameSite: "none",
         maxAge: 2 * 24 * 60 * 60 * 1000 
