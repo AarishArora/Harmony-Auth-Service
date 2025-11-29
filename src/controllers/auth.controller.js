@@ -42,7 +42,13 @@ export async function register(req, res) {
         role: user.role
     })
 
-    res.cookie("token", token);
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/",
+        maxAge: 2 * 24 * 60 * 60 * 1000
+    });
 
     res.status(201).json({
         message: "User created succesfully",
@@ -166,7 +172,13 @@ export async function login(req, res) {
         fullname: user.fullname
     }, config.JWT_SECRET, {expiresIn: "2d"})
 
-    res.cookie("token", token)
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/",
+        maxAge: 2 * 24 * 60 * 60 * 1000
+    });
 
     res.status(200).json({
         message: "User logged in successfully",
