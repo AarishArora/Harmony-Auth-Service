@@ -42,14 +42,6 @@ export async function register(req, res) {
         role: user.role
     })
 
-    res.cookie("token", token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        path: "/",
-        maxAge: 2 * 24 * 60 * 60 * 1000
-    });
-
     res.status(201).json({
         message: "User created succesfully",
         token,
@@ -82,28 +74,12 @@ export async function googleAuthCallback(req, res) {
             fullname: isUserAlreadyExists.fullname
         },config.JWT_SECRET, {expiresIn: "2d"})
 
-        res.cookie("token", token, { 
-            httpOnly: true, 
-            path: "/",
-            secure: true,
-            sameSite: "none",
-            maxAge: 2 * 24 * 60 * 60 * 1000 
-        })
-
-        // Pass token and user data as query parameters
-        const userData = JSON.stringify({
-            id: isUserAlreadyExists._id,
-            email: isUserAlreadyExists.email,
-            fullname: isUserAlreadyExists.fullname,
-            role: isUserAlreadyExists.role
-        });
-        const encodedUserData = encodeURIComponent(userData);
-
+        // Pass token as query parameter
         if(isUserAlreadyExists.role === "artist") {
-            return res.redirect(`${config.FRONTEND_URL}${redirectPath}?token=${token}&user=${encodedUserData}`)
+            return res.redirect(`https://harmony-musichub.vercel.app/auth/google/callback?token=${token}`)
         }
 
-        return res.redirect(`${config.FRONTEND_URL}${redirectPath}?token=${token}&user=${encodedUserData}`)
+        return res.redirect(`https://harmony-musichub.vercel.app/auth/google/callback?token=${token}`)
     }
 
     const newUser = await userModel.create({
@@ -130,24 +106,8 @@ export async function googleAuthCallback(req, res) {
         fullname: newUser.fullname
     },config.JWT_SECRET, {expiresIn: "2d"})
 
-    res.cookie("token", token, { 
-        httpOnly: true,
-        path: "/",
-        secure: true,
-        sameSite: "none",
-        maxAge: 2 * 24 * 60 * 60 * 1000 
-    })
-
-    // Pass token and user data as query parameters
-    const userData = JSON.stringify({
-        id: newUser._id,
-        email: newUser.email,
-        fullname: newUser.fullname,
-        role: newUser.role
-    });
-    const encodedUserData = encodeURIComponent(userData);
-
-    res.redirect(`${config.FRONTEND_URL}?token=${token}&user=${encodedUserData}`)
+    // Redirect to frontend callback with token
+    res.redirect(`https://harmony-musichub.vercel.app/auth/google/callback?token=${token}`)
 
 }
 
@@ -171,14 +131,6 @@ export async function login(req, res) {
         role: user.role,
         fullname: user.fullname
     }, config.JWT_SECRET, {expiresIn: "2d"})
-
-    res.cookie("token", token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        path: "/",
-        maxAge: 2 * 24 * 60 * 60 * 1000
-    });
 
     res.status(200).json({
         message: "User logged in successfully",

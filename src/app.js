@@ -1,6 +1,5 @@
 import express from "express";
 import morgan from "morgan";
-import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.routes.js";
 import passport from "passport";
 import {Strategy as GoogleStrategy} from "passport-google-oauth20"
@@ -32,7 +31,6 @@ app.use((req, res, next) => {
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use(cookieParser());
 
 // Configure session middleware
 app.use(session({
